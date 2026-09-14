@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import { api } from "../services/api";
+import { api, SERVER_BASE } from "../services/api";
 import PptViewerModal from "../components/PptViewerModal";
 import {
   Video,
@@ -902,7 +902,6 @@ export default function FacultyDashboard() {
                             <button
                               type="button"
                               onClick={() => {
-                                const SERVER_BASE = "http://localhost:8000";
                                 let url = res.fileUrl || "";
                                 if (url.startsWith("/uploads")) url = `${SERVER_BASE}${url}`;
                                 const ext = (res.fileName || url).split(".").pop().toLowerCase();
@@ -918,7 +917,7 @@ export default function FacultyDashboard() {
                               <span>View</span>
                             </button>
                             <a
-                              href={res.fileUrl?.startsWith("/uploads") ? `http://localhost:8000${res.fileUrl}` : res.fileUrl}
+                              href={res.fileUrl?.startsWith("/uploads") ? `${SERVER_BASE}${res.fileUrl}` : res.fileUrl}
                               download={res.fileName || `${res.title}.${resType.toLowerCase()}`}
                               target="_blank"
                               rel="noreferrer"

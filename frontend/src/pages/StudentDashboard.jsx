@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useUser } from "../context/UserContext";
-import { api } from "../services/api";
+import { api, SERVER_BASE } from "../services/api";
 import PptViewerModal from "../components/PptViewerModal";
 import {
   Sparkles,
@@ -266,7 +266,6 @@ export default function StudentDashboard() {
       return;
     }
 
-    const SERVER_BASE = "http://localhost:8000";
     let fileUrl = res.fileUrl.trim();
     if (fileUrl.startsWith("/uploads")) {
       fileUrl = `${SERVER_BASE}${fileUrl}`;
@@ -308,7 +307,6 @@ export default function StudentDashboard() {
       return;
     }
 
-    const SERVER_BASE = "http://localhost:8000";
     let fileUrl = res.fileUrl.trim();
     if (fileUrl.startsWith("/uploads")) {
       fileUrl = `${SERVER_BASE}${fileUrl}`;

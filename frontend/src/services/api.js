@@ -1,4 +1,65 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+export const SERVER_BASE = API_BASE_URL.replace(/\/api\/?$/, "");
+
+export const DEMO_USERS_FALLBACK = [
+  {
+    id: 1,
+    name: "Super Admin",
+    role: "SUPER_ADMIN",
+    identifier: "superadmin",
+    email: "superadmin@vignan.ac.in",
+    password: "SuperAdmin@123",
+    department: "Administration",
+    college: "Vignan University"
+  },
+  {
+    id: 2,
+    name: "SAI ESWARI",
+    role: "FACULTY",
+    identifier: "sai.eswari",
+    email: "sai.eswari@vignan.ac.in",
+    password: "Faculty@123",
+    department: "CSE",
+    classTeacherSection: "Section A",
+    assignedSubject: "Database Management System",
+    college: "Vignan University"
+  },
+  {
+    id: 3,
+    name: "BHARGAVI",
+    role: "REMEDIAL_COORDINATOR",
+    identifier: "bhargavi",
+    email: "bhargavi@vignan.ac.in",
+    password: "Remedial@123",
+    department: "Remedial Cell",
+    classTeacherSection: "Section C",
+    college: "Vignan University"
+  },
+  {
+    id: 4,
+    name: "VIGNAN's NTR LIBRARY",
+    role: "LIBRARY",
+    identifier: "library",
+    email: "library@vignan.ac.in",
+    password: "Library@123",
+    department: "Central Library",
+    college: "Vignan University"
+  },
+  {
+    id: 5,
+    name: "Rahul Kumar",
+    role: "STUDENT",
+    identifier: "23CSE001",
+    email: "rahul@vignan.ac.in",
+    password: "password123",
+    department: "CSE",
+    branch: "CSE",
+    year: "2nd Year",
+    section: "A",
+    progress: 32.0,
+    college: "Vignan University"
+  }
+];
 
 async function request(endpoint, options = {}) {
   try {
@@ -22,9 +83,113 @@ async function request(endpoint, options = {}) {
 
 export const api = {
   // Auth
-  getDemoUsers: () => request("/auth/demo-users"),
-  login: (credentials) => request("/auth/login", { method: "POST", body: JSON.stringify(credentials) }),
-  register: (userData) => request("/auth/register", { method: "POST", body: JSON.stringify(userData) }),
+  getDemoUsers: async () => {
+    try {
+      return await request("/auth/demo-users");
+    } catch {
+      return DEMO_USERS_FALLBACK.map(({ password, ...u }) => u);
+    }
+  },
+  login: async (credentials) => {
+    try {
+      return await request("/auth/login", { method: "POST", body: JSON.stringify(credentials) });
+    } catch (err) {
+      const msg = err.message || "";
+      if (
+        msg &&
+        !msg.toLowerCase().includes("failed to fetch") &&
+        !msg.toLowerCase().includes("networkerror") &&
+        !msg.toLowerCase().includes("load failed")
+      ) {
+        throw err;
+      }
+
+      // Offline / Static deployment fallback authentication
+      const role = (credentials.role || "").toUpperCase().trim();
+      const ident = (credentials.identifier || "").trim().toLowerCase();
+      const pw = credentials.password || "";
+
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const allUsers = [...DEMO_USERS_FALLBACK, ...localUsers];
+
+      const found = allUsers.find(
+        (u) =>
+          u.role.toUpperCase().trim() === role &&
+          ((u.identifier && u.identifier.toLowerCase() === ident) || (u.email && u.email.toLowerCase() === ident))
+      );
+
+      if (!found) {
+        throw new Error("Invalid Credentials. Account not found for selected role.");
+      }
+
+      if (found.password && found.password !== pw) {
+        throw new Error("Invalid Credentials. Password does not match.");
+      }
+
+      const { password, ...userObj } = found;
+      return {
+        success: true,
+        message: "Login Successful (Offline Fallback)",
+        token: `gap2grow_token_${found.id}_offline`,
+        user: userObj
+      };
+    }
+  },
+  register: async (userData) => {
+    try {
+      return await request("/auth/register", { method: "POST", body: JSON.stringify(userData) });
+    } catch (err) {
+      const msg = err.message || "";
+      if (
+        msg &&
+        !msg.toLowerCase().includes("failed to fetch") &&
+        !msg.toLowerCase().includes("networkerror") &&
+        !msg.toLowerCase().includes("load failed")
+      ) {
+        throw err;
+      }
+
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const emailLower = (userData.email || "").trim().toLowerCase();
+      const ident = (userData.identifier || "").trim();
+
+      if (
+        localUsers.some(
+          (u) => (u.email && u.email.toLowerCase() === emailLower) || (u.identifier && u.identifier === ident)
+        ) ||
+        DEMO_USERS_FALLBACK.some(
+          (u) => (u.email && u.email.toLowerCase() === emailLower) || (u.identifier && u.identifier === ident)
+        )
+      ) {
+        throw new Error("Registration failed. Register Number or Email ID is already registered.");
+      }
+
+      const newUser = {
+        id: Date.now(),
+        name: (userData.name || "").trim(),
+        role: "STUDENT",
+        identifier: ident,
+        email: emailLower,
+        password: userData.password,
+        department: userData.branch || userData.department || "CSE",
+        branch: userData.branch || "CSE",
+        year: userData.year ? (userData.year.includes("Year") ? userData.year : `${userData.year} Year`) : "2nd Year",
+        section: "A",
+        progress: 35.0,
+        college: "Vignan University"
+      };
+
+      localUsers.push(newUser);
+      localStorage.setItem("gap2grow_registered_users", JSON.stringify(localUsers));
+
+      const { password, ...userObj } = newUser;
+      return {
+        success: true,
+        message: "Registration Successful (Offline Mode)",
+        user: userObj
+      };
+    }
+  },
   changePassword: (data) => request("/auth/change-password", { method: "POST", body: JSON.stringify(data) }),
 
   // Student & Subject services
@@ -325,11 +490,76 @@ export const api = {
   },
 
   // Super Admin & User Profile API
-  adminCreateUser: (userData) => request("/admin/create-user", { method: "POST", body: JSON.stringify(userData) }),
-  adminGetUsers: () => request("/admin/users"),
-  adminUpdateUser: (userId, userData) => request(`/admin/users/${userId}`, { method: "PUT", body: JSON.stringify(userData) }),
-  adminUpdateUserSubject: (userId, subject) => request(`/admin/users/${userId}/subject`, { method: "PUT", body: JSON.stringify({ subject }) }),
-  adminDeleteUser: (userId) => request(`/admin/users/${userId}`, { method: "DELETE" }),
+  adminCreateUser: async (userData) => {
+    try {
+      return await request("/admin/create-user", { method: "POST", body: JSON.stringify(userData) });
+    } catch {
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const newUser = {
+        id: Date.now(),
+        name: userData.name,
+        role: userData.role,
+        identifier: userData.identifier,
+        email: userData.email,
+        password: userData.password,
+        department: userData.department || "CSE",
+        classTeacherSection: userData.classTeacherSection || "Section A",
+        assignedSubject: userData.assignedSubject || "",
+        contactNumber: userData.contactNumber || "+91 9876543210",
+        college: "Vignan University"
+      };
+      localUsers.push(newUser);
+      localStorage.setItem("gap2grow_registered_users", JSON.stringify(localUsers));
+      const { password, ...userObj } = newUser;
+      return userObj;
+    }
+  },
+  adminGetUsers: async () => {
+    try {
+      return await request("/admin/users");
+    } catch {
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const baseList = DEMO_USERS_FALLBACK.map(({ password, ...u }) => u);
+      const merged = [...baseList];
+      for (const u of localUsers) {
+        if (!merged.some(m => m.id === u.id || m.identifier === u.identifier)) {
+          const { password, ...cleaned } = u;
+          merged.push(cleaned);
+        }
+      }
+      return merged;
+    }
+  },
+  adminUpdateUser: async (userId, userData) => {
+    try {
+      return await request(`/admin/users/${userId}`, { method: "PUT", body: JSON.stringify(userData) });
+    } catch {
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const updated = localUsers.map(u => u.id === userId ? { ...u, ...userData } : u);
+      localStorage.setItem("gap2grow_registered_users", JSON.stringify(updated));
+      return { success: true };
+    }
+  },
+  adminUpdateUserSubject: async (userId, subject) => {
+    try {
+      return await request(`/admin/users/${userId}/subject`, { method: "PUT", body: JSON.stringify({ subject }) });
+    } catch {
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const updated = localUsers.map(u => u.id === userId ? { ...u, assignedSubject: subject } : u);
+      localStorage.setItem("gap2grow_registered_users", JSON.stringify(updated));
+      return { success: true };
+    }
+  },
+  adminDeleteUser: async (userId) => {
+    try {
+      return await request(`/admin/users/${userId}`, { method: "DELETE" });
+    } catch {
+      const localUsers = JSON.parse(localStorage.getItem("gap2grow_registered_users") || "[]");
+      const updated = localUsers.filter(u => u.id !== userId);
+      localStorage.setItem("gap2grow_registered_users", JSON.stringify(updated));
+      return { success: true };
+    }
+  },
   updateProfile: (userData, params = {}) => {
     const q = new URLSearchParams(params).toString();
     return request(`/user/profile${q ? `?${q}` : ""}`, { method: "PUT", body: JSON.stringify(userData) });

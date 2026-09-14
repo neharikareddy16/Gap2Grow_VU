@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { SERVER_BASE } from "../services/api";
 import {
   X,
   Presentation,
@@ -18,7 +19,6 @@ export default function PptViewerModal({ resource, onClose }) {
   const [activeTab, setActiveTab] = useState("presentation"); // 'presentation' or 'notes'
 
   // Extract resource details safely
-  const SERVER_BASE = "http://localhost:8000";
   let rawUrl = resource?.fileUrl || resource?.url || "";
   if (typeof rawUrl === "string" && rawUrl.startsWith("/uploads")) {
     rawUrl = `${SERVER_BASE}${rawUrl}`;
