@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <circle cx="24" cy="24" r="22.5" fill="#FFFFFF" stroke="#4F46E5" stroke-width="2.5"/>
+  <circle cx="24" cy="24" r="20" fill="#EEF2FF" opacity="0.4"/>
+  <text x="24" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="900" fill="#3730A3" text-anchor="middle">UGC</text>
+  <rect x="13" y="24" width="22" height="7" rx="2" fill="#4F46E5"/>
+  <text x="24" y="29.5" font-family="'Segoe UI', Roboto, sans-serif" font-size="4.8" font-weight="800" fill="#FFFFFF" text-anchor="middle">DEB</text>
+  <text x="24" y="38" font-family="'Segoe UI', Roboto, sans-serif" font-size="4" font-weight="700" fill="#4338CA" text-anchor="middle">APPROVED</text>
+</svg>
