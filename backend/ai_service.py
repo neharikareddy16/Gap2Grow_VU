@@ -588,12 +588,12 @@ Return ONLY a single valid JSON object matching this structure:
         topic_label = title or topic_hint or content[:100] or "Academic Learning Resource"
         prompt = self.build_mode_prompt(input_mode, topic_label, content, extra_context)
 
-        # 1. Try Gemini API (gemini-3.6-flash, gemini-3.5-flash, gemini-flash-latest)
+        # 1. Try Gemini API
         gemini_key = self.gemini_key or os.getenv("GEMINI_API_KEY")
         if GEMINI_AVAILABLE and gemini_key:
             try:
                 genai.configure(api_key=gemini_key)
-                for model_name in ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-flash-latest']:
+                for model_name in ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']:
                     try:
                         m = genai.GenerativeModel(model_name)
                         resp = m.generate_content(prompt)
@@ -1565,12 +1565,16 @@ Return ONLY a single valid JSON object matching this structure:
             try:
                 client = genai.Client(api_key=gemini_key)
                 prompt = f"{system_instruction}\n\nStudent Query: {message}"
-                response = client.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt
-                )
-                if response and response.text:
-                    return response.text
+                for m_name in ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+                    try:
+                        response = client.models.generate_content(
+                            model=m_name,
+                            contents=prompt
+                        )
+                        if response and response.text:
+                            return response.text
+                    except Exception:
+                        continue
             except Exception:
                 pass
 

@@ -784,7 +784,11 @@ def submit_student_exam(exam_id: int, req: ExamSubmissionRequest, db: Session = 
         ans = req.answers.get(str(q.id), req.answers.get(f"q_{q.id}", "")).strip()
 
         if q.question_type in ["MCQ", "TRUE_FALSE"]:
-            is_correct = (ans.upper() == q.correct_answer.strip().upper())
+            ans_clean = ans.strip().upper()
+            correct_clean = (q.correct_answer or "").strip().upper()
+            ans_key = ans_clean.split(".")[0].strip() if "." in ans_clean else ans_clean
+            correct_key = correct_clean.split(".")[0].strip() if "." in correct_clean else correct_clean
+            is_correct = bool(ans_clean) and (ans_clean == correct_clean or ans_key == correct_key or (len(correct_key) == 1 and ans_clean.startswith(correct_key)))
             score_earned = float(q_marks) if is_correct else 0.0
             if is_correct:
                 correct_count += 1
@@ -1795,6 +1799,27 @@ async def upload_faculty_file(
     db.add(pdf)
     db.commit()
     db.refresh(pdf)
+
+    # Synchronize to models.Resource for general student queries
+    res_obj = models.Resource(
+        title=title,
+        subject=subject,
+        topic=unit or "Unit Material",
+        description=description or f"Official faculty study resource for {subject}",
+        resource_type=res_type,
+        url=file_url,
+        file_path=file_url,
+        tags=f"Faculty, {subject}, Notes",
+        difficulty="Recommended",
+        duration_mins=20,
+        platform=f"Vignan Faculty ({facultyName})",
+        faculty_endorsed=True,
+        created_by_name=facultyName,
+        created_at=datetime.datetime.utcnow()
+    )
+    db.add(res_obj)
+    db.commit()
+
     return pdf.to_dict()
 
 @app.post("/api/faculty/upload-pdf")
@@ -1831,10 +1856,60 @@ def upload_faculty_pdf(req: UploadFacultyPdfRequest, db: Session = Depends(get_d
     db.add(pdf)
     db.commit()
     db.refresh(pdf)
+
+    # Synchronize to models.Resource
+    res_obj = models.Resource(
+        title=req.title,
+        subject=req.subject,
+        topic=req.unit or "Unit Material",
+        description=req.description or f"Official faculty study resource for {req.subject}",
+        resource_type=req.resourceType or "PDF",
+        url=file_url,
+        file_path=file_url,
+        tags=f"Faculty, {req.subject}, Notes",
+        difficulty="Recommended",
+        duration_mins=20,
+        platform=f"Vignan Faculty ({req.facultyName})",
+        faculty_endorsed=True,
+        created_by_name=req.facultyName,
+        created_at=datetime.datetime.utcnow()
+    )
+    db.add(res_obj)
+    db.commit()
+
     return pdf.to_dict()
 
 
+# ----------------- REMEDIAL SUGGESTIONS & STUDENT NOTIFICATIONS -----------------
+
+@app.post("/api/remedial/suggestions")
+def send_remedial_suggestion_endpoint(req: RemedialSuggestionRequest, db: Session = Depends(get_db)):
+    ident = req.studentIdentifier.strip()
+    notif = models.Notification(
+        student_identifier=ident,
+        title="Remedial Coordinator Support",
+        message=req.suggestionText.strip(),
+        type="remedial_suggestion",
+        sender_name=req.sentByName or "Remedial Coordinator",
+        subject=req.subject or "Database Management System",
+        created_at=datetime.datetime.utcnow(),
+        is_read=False
+    )
+    db.add(notif)
+    db.commit()
+    db.refresh(notif)
+    return {"success": True, "message": "Suggestion delivered to student notifications.", "notification": notif.to_dict()}
 
 
+@app.get("/api/student/notifications")
+def get_student_notifications_endpoint(student_identifier: str = Query(...), db: Session = Depends(get_db)):
+    ident = student_identifier.strip()
+    notifs = db.query(models.Notification).filter(
+        or_(
+            models.Notification.student_identifier == ident,
+            models.Notification.student_identifier == "ALL",
+            models.Notification.student_identifier.ilike(f"%{ident}%")
+        )
+    ).order_by(desc(models.Notification.created_at)).all()
+    return [n.to_dict() for n in notifs]
 
-# Trigger reload

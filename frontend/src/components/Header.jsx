@@ -1,21 +1,46 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import { Menu, X, LogOut, TrendingUp, Shield, Settings, KeyRound } from "lucide-react";
+import { api } from "../services/api";
+import { Menu, X, LogOut, TrendingUp, Shield, Settings, KeyRound, Bell, CheckCircle2, MessageSquare } from "lucide-react";
 
 export default function Header({ mobileOpen, setMobileOpen, onOpenProfileModal }) {
   const { currentUser, logout } = useUser();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const dropdownRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotifOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (currentUser?.identifier || currentUser?.id) {
+      fetchNotifs();
+      const interval = setInterval(fetchNotifs, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [currentUser]);
+
+  const fetchNotifs = async () => {
+    const ident = currentUser?.identifier || currentUser?.id || "23CSE101";
+    try {
+      const list = await api.getStudentNotifications(ident);
+      setNotifications(list || []);
+    } catch {
+      // Fallback
+    }
+  };
 
   if (!currentUser) return null;
 
@@ -73,6 +98,66 @@ export default function Header({ mobileOpen, setMobileOpen, onOpenProfileModal }
                 className="h-10 w-10 sm:h-11 sm:w-11 object-contain hover:scale-110 transition-transform cursor-pointer"
               />
             ))}
+          </div>
+
+          {/* Notification Bell Button & Dropdown */}
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => setNotifOpen(!notifOpen)}
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all relative cursor-pointer flex items-center justify-center"
+              title="Notifications & Remedial Coordinator Suggestions"
+            >
+              <Bell className="w-4 h-4 text-gray-700" />
+              {notifications.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-pulse">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+
+            {notifOpen && (
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-200 py-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="px-4 pb-2 border-b border-gray-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-[#1264E8]" />
+                    <span className="text-xs font-bold text-gray-900">Notifications & Support</span>
+                  </div>
+                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                    {notifications.length} New
+                  </span>
+                </div>
+
+                <div className="max-h-80 overflow-y-auto divide-y divide-gray-100">
+                  {notifications.length === 0 ? (
+                    <div className="p-4 text-center">
+                      <p className="text-xs font-medium text-gray-500">No new notifications.</p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">Remedial suggestions from coordinators will appear here.</p>
+                    </div>
+                  ) : (
+                    notifications.map((n, idx) => (
+                      <div key={n.id || idx} className="p-3 hover:bg-blue-50/50 transition-colors">
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-xs font-bold text-[#1264E8]">
+                            {n.title || "Remedial Coordinator Support"}
+                          </span>
+                          <span className="text-[10px] font-semibold text-gray-400 whitespace-nowrap">
+                            {n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-700 mt-1 font-medium leading-snug">
+                          {n.message || n.suggestion_text}
+                        </p>
+                        {n.senderName && (
+                          <p className="text-[10px] text-gray-400 mt-1 italic">
+                            Sent by: {n.senderName} • Subject: {n.subject || "CSE"}
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* User Profile Avatar with Dropdown - Sleek Small Pill Avatar */}

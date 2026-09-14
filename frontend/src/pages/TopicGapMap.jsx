@@ -7523,8 +7523,21 @@ export default function TopicGapMap() {
     // Dynamic Calibration based on Diagnostic Test taken by user
     const userDiagnostic = getSubjectDiagnosticData(selectedSubjectObj.name);
 
-    if (userDiagnostic) {
-      loadedTopics = loadedTopics.map((t) => {
+    // Realistic baseline distribution for unassessed subjects so topics aren't all hardcoded "Strong"
+    const baselineCalibration = [
+      { skillLevel: "Strong", gapLevel: "Low", progressPct: 82 },
+      { skillLevel: "Weak", gapLevel: "High", progressPct: 38 },
+      { skillLevel: "Medium", gapLevel: "Medium", progressPct: 60 },
+      { skillLevel: "Critically Weak", gapLevel: "Critical", progressPct: 30 },
+      { skillLevel: "Medium", gapLevel: "Medium", progressPct: 65 }
+    ];
+
+    loadedTopics = loadedTopics.map((t, idx) => {
+      let acc = t.progressPct || t.accuracy;
+      let skillLevel = t.skillLevel;
+      let gapLevel = t.gapLevel;
+
+      if (userDiagnostic) {
         const matched = userDiagnostic.find(
           (d) => d.topic && (
             d.topic.toLowerCase().includes(t.name.toLowerCase()) ||
@@ -7534,23 +7547,34 @@ export default function TopicGapMap() {
             (d.topic.toLowerCase().includes("transaction") && t.name.toLowerCase().includes("transaction")) ||
             (d.topic.toLowerCase().includes("index") && t.name.toLowerCase().includes("index")) ||
             (d.topic.toLowerCase().includes("sql") && t.name.toLowerCase().includes("sql")) ||
-            (d.topic.toLowerCase().includes("er") && t.name.toLowerCase().includes("er"))
+            (d.topic.toLowerCase().includes("er") && t.name.toLowerCase().includes("er")) ||
+            (d.topic.toLowerCase().includes("tree") && t.name.toLowerCase().includes("tree")) ||
+            (d.topic.toLowerCase().includes("graph") && t.name.toLowerCase().includes("graph")) ||
+            (d.topic.toLowerCase().includes("class") && t.name.toLowerCase().includes("class"))
           )
         );
         if (matched) {
-          const acc = matched.accuracy;
-          const { skillLevel, gapLevel } = calculateSkillLevel(acc);
-          return {
-            ...t,
-            progressPct: acc,
-            accuracy: acc,
-            skillLevel,
-            gapLevel
-          };
+          acc = matched.accuracy;
+          const calibrated = calculateSkillLevel(acc);
+          skillLevel = calibrated.skillLevel;
+          gapLevel = calibrated.gapLevel;
         }
-        return t;
-      });
-    }
+      } else {
+        // If no user diagnostic test taken yet, apply realistic baseline distribution
+        const base = baselineCalibration[idx % baselineCalibration.length];
+        acc = base.progressPct;
+        skillLevel = base.skillLevel;
+        gapLevel = base.gapLevel;
+      }
+
+      return {
+        ...t,
+        progressPct: acc,
+        accuracy: acc,
+        skillLevel,
+        gapLevel
+      };
+    });
 
     setTopicsList(loadedTopics);
     const initialTopic = loadedTopics[0];

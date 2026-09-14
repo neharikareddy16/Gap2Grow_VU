@@ -383,30 +383,6 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
         </button>
 
         <button
-          onClick={() => { setActiveTab("remedial-students"); setMobileOpen?.(false); }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all text-left ${
-            activeTab === "remedial-students"
-              ? "bg-[#1264E8] text-white shadow-sm"
-              : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          }`}
-        >
-          <Users className="w-4 h-4 flex-shrink-0" />
-          <span>Students</span>
-        </button>
-
-        <button
-          onClick={() => { setActiveTab("remedial-gaps"); setMobileOpen?.(false); }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all text-left ${
-            activeTab === "remedial-gaps"
-              ? "bg-[#1264E8] text-white shadow-sm"
-              : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          }`}
-        >
-          <Target className="w-4 h-4 flex-shrink-0 text-rose-500" />
-          <span>Learning Gaps</span>
-        </button>
-
-        <button
           onClick={() => { setActiveTab("remedial-assessments"); setMobileOpen?.(false); }}
           className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all text-left ${
             activeTab === "remedial-assessments"

@@ -86,14 +86,14 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 8,
         questions: [
-          { id: 1, questionText: "What is the time complexity of binary search on a sorted array of size n?", questionType: "MCQ", marks: 2, options: ["A. O(n)", "B. O(log n)", "C. O(n²)", "D. O(1)"] },
-          { id: 2, questionText: "In a binary tree, which traversal visits the root node LAST?", questionType: "MCQ", marks: 2, options: ["A. Preorder", "B. Inorder", "C. Postorder", "D. Level-order"] },
-          { id: 3, questionText: "A Binary Search Tree (BST) guarantees that all values in the left subtree are strictly smaller than the root value.", questionType: "TRUE_FALSE", marks: 2, options: ["True", "False"] },
-          { id: 4, questionText: "Explain the role of the call stack in recursive binary tree traversals.", questionType: "SHORT_ANSWER", marks: 4, options: [] },
-          { id: 5, questionText: "What is the maximum number of nodes in a binary tree of height h (where a root-only tree has height 0)?", questionType: "MCQ", marks: 2, options: ["A. 2^h", "B. 2^(h+1) - 1", "C. 2^h - 1", "D. h²"] },
-          { id: 6, questionText: "Which data structure is fundamentally utilized to perform Breadth-First Search (BFS) / Level-Order traversal?", questionType: "MCQ", marks: 2, options: ["A. Stack", "B. Queue", "C. Priority Queue", "D. Hash Map"] },
-          { id: 7, questionText: "Why is recursive postorder traversal particularly suitable for deleting or freeing an entire binary tree?", questionType: "SHORT_ANSWER", marks: 4, options: [] },
-          { id: 8, questionText: "In a full/strictly binary tree, every non-leaf node has exactly two children.", questionType: "TRUE_FALSE", marks: 2, options: ["True", "False"] }
+          { id: 1, questionText: "What is the time complexity of binary search on a sorted array of size n?", questionType: "MCQ", marks: 2, options: ["A. O(n)", "B. O(log n)", "C. O(n²)", "D. O(1)"], correctAnswer: "B. O(log n)" },
+          { id: 2, questionText: "In a binary tree, which traversal visits the root node LAST?", questionType: "MCQ", marks: 2, options: ["A. Preorder", "B. Inorder", "C. Postorder", "D. Level-order"], correctAnswer: "C. Postorder" },
+          { id: 3, questionText: "A Binary Search Tree (BST) guarantees that all values in the left subtree are strictly smaller than the root value.", questionType: "TRUE_FALSE", marks: 2, options: ["True", "False"], correctAnswer: "True" },
+          { id: 4, questionText: "Explain the role of the call stack in recursive binary tree traversals.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Stores active recursive call stack frames." },
+          { id: 5, questionText: "What is the maximum number of nodes in a binary tree of height h (where a root-only tree has height 0)?", questionType: "MCQ", marks: 2, options: ["A. 2^h", "B. 2^(h+1) - 1", "C. 2^h - 1", "D. h²"], correctAnswer: "B. 2^(h+1) - 1" },
+          { id: 6, questionText: "Which data structure is fundamentally utilized to perform Breadth-First Search (BFS) / Level-Order traversal?", questionType: "MCQ", marks: 2, options: ["A. Stack", "B. Queue", "C. Priority Queue", "D. Hash Map"], correctAnswer: "B. Queue" },
+          { id: 7, questionText: "Why is recursive postorder traversal particularly suitable for deleting or freeing an entire binary tree?", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Visits child subtrees before freeing root node memory." },
+          { id: 8, questionText: "In a full/strictly binary tree, every non-leaf node has exactly two children.", questionType: "TRUE_FALSE", marks: 2, options: ["True", "False"], correctAnswer: "True" }
         ]
       },
       {
@@ -107,11 +107,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 101, questionText: "Which Java keyword is used by a subclass to inherit a superclass?", questionType: "MCQ", marks: 4, options: ["A. implements", "B. extends", "C. inherits", "D. super"] },
-          { id: 102, questionText: "Multiple inheritance of classes is directly supported in Java.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 103, questionText: "Which mechanism allows a method to have the same name but different parameters within the same class?", questionType: "MCQ", marks: 4, options: ["A. Overriding", "B. Overloading", "C. Encapsulation", "D. Abstraction"] },
-          { id: 104, questionText: "All classes in Java implicitly inherit from which root class?", questionType: "MCQ", marks: 4, options: ["A. java.lang.Main", "B. java.lang.Object", "C. java.lang.System", "D. java.lang.Base"] },
-          { id: 105, questionText: "What is the primary purpose of interfaces in Java?", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 101, questionText: "Which Java keyword is used by a subclass to inherit a superclass?", questionType: "MCQ", marks: 4, options: ["A. implements", "B. extends", "C. inherits", "D. super"], correctAnswer: "B. extends" },
+          { id: 102, questionText: "Multiple inheritance of classes is directly supported in Java.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "False" },
+          { id: 103, questionText: "Which mechanism allows a method to have the same name but different parameters within the same class?", questionType: "MCQ", marks: 4, options: ["A. Overriding", "B. Overloading", "C. Encapsulation", "D. Abstraction"], correctAnswer: "B. Overloading" },
+          { id: 104, questionText: "All classes in Java implicitly inherit from which root class?", questionType: "MCQ", marks: 4, options: ["A. java.lang.Main", "B. java.lang.Object", "C. java.lang.System", "D. java.lang.Base"], correctAnswer: "B. java.lang.Object" },
+          { id: 105, questionText: "What is the primary purpose of interfaces in Java?", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Defines contracts for multiple inheritance of type behavior." }
         ]
       },
       {
@@ -125,11 +125,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 201, questionText: "Which normal form eliminates transitive dependency?", questionType: "MCQ", marks: 4, options: ["A. 1NF", "B. 2NF", "C. 3NF", "D. BCNF"] },
-          { id: 202, questionText: "Primary key columns in a relational table can accept NULL values.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 203, questionText: "Which SQL clause is used to filter aggregated group results?", questionType: "MCQ", marks: 4, options: ["A. WHERE", "B. HAVING", "C. ORDER BY", "D. GROUP BY"] },
-          { id: 204, questionText: "What does the 'I' in ACID transaction properties stand for?", questionType: "MCQ", marks: 4, options: ["A. Integrity", "B. Isolation", "C. Indexing", "D. Immutability"] },
-          { id: 205, questionText: "Explain the difference between INNER JOIN and LEFT OUTER JOIN in SQL.", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 201, questionText: "Which normal form eliminates transitive dependency?", questionType: "MCQ", marks: 4, options: ["A. 1NF", "B. 2NF", "C. 3NF", "D. BCNF"], correctAnswer: "C. 3NF" },
+          { id: 202, questionText: "Primary key columns in a relational table can accept NULL values.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "False" },
+          { id: 203, questionText: "Which SQL clause is used to filter aggregated group results?", questionType: "MCQ", marks: 4, options: ["A. WHERE", "B. HAVING", "C. ORDER BY", "D. GROUP BY"], correctAnswer: "B. HAVING" },
+          { id: 204, questionText: "What does the 'I' in ACID transaction properties stand for?", questionType: "MCQ", marks: 4, options: ["A. Integrity", "B. Isolation", "C. Indexing", "D. Immutability"], correctAnswer: "B. Isolation" },
+          { id: 205, questionText: "Explain the difference between INNER JOIN and LEFT OUTER JOIN in SQL.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "LEFT JOIN preserves non-matching rows from left table." }
         ]
       },
       {
@@ -143,11 +143,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 301, questionText: "What is the output of a 2-input XOR gate when both inputs are 1?", questionType: "MCQ", marks: 4, options: ["A. 0", "B. 1", "C. Undefined", "D. High Z"] },
-          { id: 302, questionText: "NAND and NOR gates are known as universal logic gates.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 303, questionText: "How many selection lines are required for an 8:1 Multiplexer?", questionType: "MCQ", marks: 4, options: ["A. 2", "B. 3", "C. 4", "D. 8"] },
-          { id: 304, questionText: "In a Karnaugh Map, grouping 4 adjacent 1s eliminates how many variables?", questionType: "MCQ", marks: 4, options: ["A. 1", "B. 2", "C. 3", "D. 4"] },
-          { id: 305, questionText: "Differentiate between combinational and sequential logic circuits.", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 301, questionText: "What is the output of a 2-input XOR gate when both inputs are 1?", questionType: "MCQ", marks: 4, options: ["A. 0", "B. 1", "C. Undefined", "D. High Z"], correctAnswer: "A. 0" },
+          { id: 302, questionText: "NAND and NOR gates are known as universal logic gates.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "True" },
+          { id: 303, questionText: "How many selection lines are required for an 8:1 Multiplexer?", questionType: "MCQ", marks: 4, options: ["A. 2", "B. 3", "C. 4", "D. 8"], correctAnswer: "B. 3" },
+          { id: 304, questionText: "In a Karnaugh Map, grouping 4 adjacent 1s eliminates how many variables?", questionType: "MCQ", marks: 4, options: ["A. 1", "B. 2", "C. 3", "D. 4"], correctAnswer: "B. 2" },
+          { id: 305, questionText: "Differentiate between combinational and sequential logic circuits.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Sequential circuits include memory elements." }
         ]
       },
       {
@@ -161,11 +161,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 401, questionText: "What is the cardinality of the power set of a set containing 4 distinct elements?", questionType: "MCQ", marks: 4, options: ["A. 4", "B. 8", "C. 16", "D. 32"] },
-          { id: 402, questionText: "A relation is an equivalence relation if it is reflexive, symmetric, and transitive.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 403, questionText: "What is the contrapositive of the implication 'If P then Q'?", questionType: "MCQ", marks: 4, options: ["A. If Q then P", "B. If not P then not Q", "C. If not Q then not P", "D. P and not Q"] },
-          { id: 404, questionText: "How many edges are in a complete graph K5 with 5 vertices?", questionType: "MCQ", marks: 4, options: ["A. 5", "B. 10", "C. 15", "D. 20"] },
-          { id: 405, questionText: "State the Principle of Mathematical Induction base step and inductive step.", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 401, questionText: "What is the cardinality of the power set of a set containing 4 distinct elements?", questionType: "MCQ", marks: 4, options: ["A. 4", "B. 8", "C. 16", "D. 32"], correctAnswer: "C. 16" },
+          { id: 402, questionText: "A relation is an equivalence relation if it is reflexive, symmetric, and transitive.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "True" },
+          { id: 403, questionText: "What is the contrapositive of the implication 'If P then Q'?", questionType: "MCQ", marks: 4, options: ["A. If Q then P", "B. If not P then not Q", "C. If not Q then not P", "D. P and not Q"], correctAnswer: "C. If not Q then not P" },
+          { id: 404, questionText: "How many edges are in a complete graph K5 with 5 vertices?", questionType: "MCQ", marks: 4, options: ["A. 5", "B. 10", "C. 15", "D. 20"], correctAnswer: "B. 10" },
+          { id: 405, questionText: "State the Principle of Mathematical Induction base step and inductive step.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Base step P(1), inductive step P(k) => P(k+1)." }
         ]
       },
       {
@@ -179,11 +179,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 501, questionText: "A* search algorithm is guaranteed to find the optimal path if the heuristic function h(n) is:", questionType: "MCQ", marks: 4, options: ["A. Overestimating", "B. Admissible (never overestimates real cost)", "C. Constant", "D. Zero"] },
-          { id: 502, questionText: "Alpha-beta pruning changes the final value decision computed by Minimax algorithm.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 503, questionText: "Which search algorithm uses a LIFO stack for fringe management?", questionType: "MCQ", marks: 4, options: ["A. BFS", "B. DFS", "C. Greedy Best-First", "D. Uniform Cost Search"] },
-          { id: 504, questionText: "In first-order logic, what symbol represents the universal quantifier?", questionType: "MCQ", marks: 4, options: ["A. ∃", "B. ∀", "C. ∈", "D. ∧"] },
-          { id: 505, questionText: "Explain how heuristic evaluation functions guide informed state space search.", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 501, questionText: "A* search algorithm is guaranteed to find the optimal path if the heuristic function h(n) is:", questionType: "MCQ", marks: 4, options: ["A. Overestimating", "B. Admissible (never overestimates real cost)", "C. Constant", "D. Zero"], correctAnswer: "B. Admissible (never overestimates real cost)" },
+          { id: 502, questionText: "Alpha-beta pruning changes the final value decision computed by Minimax algorithm.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "False" },
+          { id: 503, questionText: "Which search algorithm uses a LIFO stack for fringe management?", questionType: "MCQ", marks: 4, options: ["A. BFS", "B. DFS", "C. Greedy Best-First", "D. Uniform Cost Search"], correctAnswer: "B. DFS" },
+          { id: 504, questionText: "In first-order logic, what symbol represents the universal quantifier?", questionType: "MCQ", marks: 4, options: ["A. ∃", "B. ∀", "C. ∈", "D. ∧"], correctAnswer: "B. ∀" },
+          { id: 505, questionText: "Explain how heuristic evaluation functions guide informed state space search.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Heuristics estimate remaining goal distance." }
         ]
       },
       {
@@ -197,11 +197,11 @@ export default function StudentExams() {
         passPercentage: 50,
         questionCount: 5,
         questions: [
-          { id: 601, questionText: "Which Pandas method is commonly used to remove missing (null) values from a DataFrame?", questionType: "MCQ", marks: 4, options: ["A. df.dropna()", "B. df.remove_null()", "C. df.clean()", "D. df.delete()"] },
-          { id: 602, questionText: "A boxplot displays the 5-number summary: min, Q1, median, Q3, and max.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"] },
-          { id: 603, questionText: "Which Matplotlib plot is best for visualizing continuous numerical data frequency distributions?", questionType: "MCQ", marks: 4, options: ["A. Bar Chart", "B. Histogram", "C. Pie Chart", "D. Scatter Plot"] },
-          { id: 604, questionText: "Which Seaborn visualization displays pairwise relationship correlation heatmaps?", questionType: "MCQ", marks: 4, options: ["A. sns.heatmap()", "B. sns.lineplot()", "C. sns.boxplot()", "D. sns.pairplot()"] },
-          { id: 605, questionText: "Explain why identifying and treating data outliers is critical prior to statistical modeling.", questionType: "SHORT_ANSWER", marks: 4, options: [] }
+          { id: 601, questionText: "Which Pandas method is commonly used to remove missing (null) values from a DataFrame?", questionType: "MCQ", marks: 4, options: ["A. df.dropna()", "B. df.remove_null()", "C. df.clean()", "D. df.delete()"], correctAnswer: "A. df.dropna()" },
+          { id: 602, questionText: "A boxplot displays the 5-number summary: min, Q1, median, Q3, and max.", questionType: "TRUE_FALSE", marks: 4, options: ["True", "False"], correctAnswer: "True" },
+          { id: 603, questionText: "Which Matplotlib plot is best for visualizing continuous numerical data frequency distributions?", questionType: "MCQ", marks: 4, options: ["A. Bar Chart", "B. Histogram", "C. Pie Chart", "D. Scatter Plot"], correctAnswer: "B. Histogram" },
+          { id: 604, questionText: "Which Seaborn visualization displays pairwise relationship correlation heatmaps?", questionType: "MCQ", marks: 4, options: ["A. sns.heatmap()", "B. sns.lineplot()", "C. sns.boxplot()", "D. sns.pairplot()"], correctAnswer: "A. sns.heatmap()" },
+          { id: 605, questionText: "Explain why identifying and treating data outliers is critical prior to statistical modeling.", questionType: "SHORT_ANSWER", marks: 4, options: [], correctAnswer: "Outliers distort mean, variance, and model weights." }
         ]
       }
     ]);
@@ -266,26 +266,57 @@ export default function StudentExams() {
       });
       setExamResult(res);
     } catch {
-      // Fallback evaluation
+      // Dynamic Fallback evaluation strictly based on answered questions
+      let totalEarned = 0;
+      let totalPossible = activeExam.totalMarks || 20;
+      let correctCount = 0;
+      let wrongCount = 0;
+      const qList = activeExam.questions || [];
+
+      const evalList = qList.map((q) => {
+        const rawAns = (answers[q.id] || answers[String(q.id)] || "").trim();
+        const qMarks = q.marks || 2;
+        let isCorrect = false;
+
+        if (rawAns) {
+          const ansKey = rawAns.split(".")[0].trim().toUpperCase();
+          if (q.questionType === "MCQ" || q.questionType === "TRUE_FALSE") {
+            const correctKey = (q.correctAnswer || "B").split(".")[0].trim().toUpperCase();
+            isCorrect = (ansKey === correctKey || rawAns.toUpperCase() === (q.correctAnswer || "").toUpperCase() || (correctKey.length === 1 && rawAns.toUpperCase().startsWith(correctKey)));
+          } else {
+            isCorrect = rawAns.length >= 5;
+          }
+        }
+
+        const earned = isCorrect ? qMarks : 0;
+        totalEarned += earned;
+        if (isCorrect) correctCount++;
+        else wrongCount++;
+
+        return {
+          questionId: q.id,
+          questionText: q.questionText,
+          questionType: q.questionType,
+          studentAnswer: rawAns || "Not Answered",
+          correctAnswer: q.correctAnswer || "Option B",
+          marksObtained: earned,
+          maxMarks: qMarks,
+          explanation: q.explanation || "Standard conceptual solution.",
+          feedback: isCorrect ? "Correct answer!" : (!rawAns ? "Not answered." : "Incorrect choice.")
+        };
+      });
+
+      const pct = Math.round((totalEarned / (totalPossible || 1)) * 100);
       setExamResult({
         examTitle: activeExam.title,
-        score: 18,
-        totalMarks: activeExam.totalMarks,
-        percentage: 90,
-        passed: true,
-        totalCorrect: 7,
-        totalWrong: 1,
+        score: totalEarned,
+        totalMarks: totalPossible,
+        percentage: pct,
+        passed: pct >= (activeExam.passPercentage || 40),
+        totalCorrect: correctCount,
+        totalWrong: wrongCount,
         timeTaken: timeTakenStr,
-        evaluation: [
-          { questionId: 1, questionText: "Binary search complexity?", studentAnswer: answers["1"] || "B", correctAnswer: "B", marksObtained: 2, maxMarks: 2, explanation: "O(log n) repeatedly divides search space in half." },
-          { questionId: 2, questionText: "Root visited last?", studentAnswer: answers["2"] || "C", correctAnswer: "C", marksObtained: 2, maxMarks: 2, explanation: "Postorder is Left-Right-Root." },
-          { questionId: 3, questionText: "BST left subtree smaller?", studentAnswer: answers["3"] || "True", correctAnswer: "True", marksObtained: 2, maxMarks: 2, explanation: "Core invariant of Binary Search Trees." },
-          { questionId: 4, questionText: "Call stack in recursion?", studentAnswer: answers["4"] || "Preserves activation records", correctAnswer: "Stores activation records containing local variables and return addresses for unwinding.", marksObtained: 3.5, maxMarks: 4, feedback: "Excellent explanation of activation frames and unwinding." },
-          { questionId: 5, questionText: "Max nodes of height h?", studentAnswer: answers["5"] || "B", correctAnswer: "B", marksObtained: 2, maxMarks: 2, explanation: "2^(h+1) - 1 nodes." },
-          { questionId: 6, questionText: "Data structure for BFS?", studentAnswer: answers["6"] || "B", correctAnswer: "B", marksObtained: 2, maxMarks: 2, explanation: "FIFO Queue." },
-          { questionId: 7, questionText: "Why postorder for tree deletion?", studentAnswer: answers["7"] || "Deletes children before root", correctAnswer: "Visits and frees subtrees first to avoid dangling pointers and memory leaks.", marksObtained: 3.5, maxMarks: 4, feedback: "Accurate bottom-up memory deallocation reasoning." },
-          { questionId: 8, questionText: "Strictly binary tree children?", studentAnswer: answers["8"] || "True", correctAnswer: "True", marksObtained: 2, maxMarks: 2, explanation: "Full binary trees have 0 or 2 children." }
-        ]
+        evaluation: evalList
       });
     } finally {
       setIsSubmitting(false);

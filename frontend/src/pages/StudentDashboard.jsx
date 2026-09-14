@@ -78,8 +78,22 @@ export default function StudentDashboard() {
 
   // PPT Viewer modal state
   const [selectedPptResource, setSelectedPptResource] = useState(null);
+  const [remedialNotifications, setRemedialNotifications] = useState([]);
 
   const resultsRef = useRef(null);
+
+  useEffect(() => {
+    const loadStudentNotifs = async () => {
+      const ident = currentUser?.identifier || currentUser?.id || "23CSE101";
+      try {
+        const notifs = await api.getStudentNotifications(ident);
+        setRemedialNotifications(notifs || []);
+      } catch (err) {
+        console.warn("Could not load notifications:", err.message);
+      }
+    };
+    loadStudentNotifs();
+  }, [currentUser]);
 
   // Dynamic loading step text rotator
   useEffect(() => {
@@ -398,6 +412,37 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+
+      {/* 1.5 REMEDIAL COORDINATOR SUGGESTION NOTIFICATION BANNER */}
+      {remedialNotifications.length > 0 && (
+        <div className="bg-amber-50 rounded-2xl border-2 border-amber-300 p-4 shadow-xs space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold px-2.5 py-0.5 bg-amber-600 text-white rounded-md uppercase tracking-wider">
+                Remedial Coordinator Advice
+              </span>
+              <span className="text-xs font-semibold text-amber-900">
+                Personalized Learning Guidance Received
+              </span>
+            </div>
+            <span className="text-[11px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
+              {remedialNotifications.length} New Message{remedialNotifications.length > 1 ? "s" : ""}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {remedialNotifications.slice(0, 2).map((notif, idx) => (
+              <div key={notif.id || idx} className="bg-white rounded-xl border border-amber-200 p-3 text-xs text-gray-800 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#1264E8]">{notif.title || "Remedial Coordinator Support"}</span>
+                  <span className="text-[10px] text-gray-400 font-medium">{notif.senderName || "Remedial Coordinator"} • {notif.subject || "Subject"}</span>
+                </div>
+                <p className="font-medium text-gray-900">{notif.message || notif.suggestionText}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 2. MAIN FEATURE: SIMPLIFY ANY LEARNING RESOURCE */}
       <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 sm:p-7 shadow-sm">

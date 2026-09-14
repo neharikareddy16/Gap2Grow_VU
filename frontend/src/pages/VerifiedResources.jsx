@@ -29,12 +29,50 @@ export default function VerifiedResources() {
   }, []);
 
   const loadResources = async () => {
+    setLoading(true);
+    let combined = [];
+    
+    // 1. Fetch Faculty Uploaded PDFs
+    try {
+      const facultyPdfs = await api.getFacultyPdfs();
+      if (Array.isArray(facultyPdfs)) {
+        const formattedPdfs = facultyPdfs.map(pdf => ({
+          id: `fac_${pdf.id || Date.now()}`,
+          title: pdf.title || pdf.fileName,
+          platform: `Vignan Faculty Upload (${pdf.facultyName || pdf.faculty_name || "Faculty"})`,
+          resourceType: pdf.resourceType || pdf.resource_type || "PDF",
+          difficulty: "Recommended",
+          durationMins: 15,
+          language: "English",
+          pricing: "Free Institutional",
+          matchPct: 99,
+          facultyEndorsed: true,
+          isFacultyUpload: true,
+          subject: pdf.subject,
+          description: pdf.description || `Official study material for ${pdf.subject}`,
+          url: pdf.fileUrl || pdf.file_url || "#",
+          fileSize: pdf.fileSize || pdf.file_size || "2.4 MB",
+          whyRecommended: [
+            `Uploaded directly by ${pdf.facultyName || pdf.faculty_name || "Department Faculty"} for ${pdf.subject || "CSE"}`,
+            "Curated official class study material and reference notes",
+            "High priority exam revision document"
+          ]
+        }));
+        combined.push(...formattedPdfs);
+      }
+    } catch (err) {
+      console.warn("Could not fetch faculty PDFs:", err.message);
+    }
+
+    // 2. Fetch General Resources
     try {
       const data = await api.getResources();
-      setResources(data);
+      if (Array.isArray(data)) {
+        combined.push(...data);
+      }
     } catch {
       // Fallback curated list
-      setResources([
+      combined.push(
         {
           id: 1,
           title: "Binary Tree Inorder, Preorder & Postorder Recursive Traces",
@@ -91,29 +129,12 @@ export default function VerifiedResources() {
             "Written by Vignan University faculty specifically for CSE 2nd Year",
             "Concise cheatsheet format with stack diagram illustrations"
           ]
-        },
-        {
-          id: 4,
-          title: "Graph BFS / DFS Adjacency Track",
-          platform: "SWAYAM / IIT Kharagpur",
-          resourceType: "Video",
-          difficulty: "Intermediate",
-          durationMins: 40,
-          language: "English",
-          pricing: "Free",
-          matchPct: 86,
-          facultyEndorsed: true,
-          url: "https://swayam.gov.in/explorer?searchText=graphs",
-          whyRecommended: [
-            "Addresses secondary critical gap in Graph Traversal (20%)",
-            "Prerequisites verified after Tree completion",
-            "Comprehensive coverage of queue-based BFS exploration"
-          ]
         }
-      ]);
-    } finally {
-      setLoading(false);
+      );
     }
+
+    setResources(combined);
+    setLoading(false);
   };
 
   const filtered = resources.filter((res) => {
