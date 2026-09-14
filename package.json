@@ -6,7 +6,8 @@
     "dev": "node run-dev.js",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "cd backend && python -m uvicorn main:app --port 8000 --reload",
-    "build": "cd frontend && npm run build",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "postinstall": "npm --prefix frontend install",
     "seed": "python backend/seed_data.py"
   },
   "keywords": [
